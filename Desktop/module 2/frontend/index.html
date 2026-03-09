@@ -60,12 +60,6 @@
           <input v-model="registerForm.password_repeat" type="password" :class="{invalid: errors.password_repeat}" required>
           <small class="error" v-if="errors.password_repeat">{{ errors.password_repeat }}</small>
 
-          <label class="checkbox">
-            <input type="checkbox" v-model="registerForm.consent">
-            <span>Согласие на обработку персональных данных</span>
-          </label>
-          <small class="error" v-if="errors.consent">{{ errors.consent }}</small>
-
           <button :disabled="loadingRegister">{{ loadingRegister ? 'Регистрируем...' : 'Зарегистрироваться' }}</button>
         </form>
       </article>

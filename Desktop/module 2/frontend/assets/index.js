@@ -14,7 +14,6 @@ createApp({
         email: "",
         password: "",
         password_repeat: "",
-        consent: false,
       },
       errors: {},
       loginError: "",

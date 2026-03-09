@@ -92,7 +92,6 @@ def register_view(request):
     email = (data.get("email") or "").strip()
     password = data.get("password") or ""
     password_repeat = data.get("password_repeat") or ""
-    consent = str(data.get("consent") or "").lower() in {"true", "1", "on", "yes"}
 
     if not full_name:
         errors["full_name"] = "Поле обязательно."
@@ -124,9 +123,6 @@ def register_view(request):
 
     if password_repeat != password:
         errors["password_repeat"] = "Пароли не совпадают."
-
-    if not consent:
-        errors["consent"] = "Необходимо согласие на обработку персональных данных."
 
     if errors:
         return JsonResponse({"ok": False, "errors": errors}, status=400)

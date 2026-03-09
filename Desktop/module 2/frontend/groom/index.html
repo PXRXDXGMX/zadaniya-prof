@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroomRoom | Админ</title>
+  <link rel="stylesheet" href="/static/assets/styles.css?v=black-v2">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
+  <script src="/static/assets/groom.js?v=black-v2" defer></script>
+</head>
+<body>
+  <div id="app" class="page">
+    <header class="hero">
+      <h1>Панель администратора</h1>
+      <div class="links">
+        <a href="/">Главная</a>
+        <button @click="logout">Выход</button>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Все заявки</h2>
+      <div class="requests-list">
+        <article class="request-row admin" v-for="item in requests" :key="item.id">
+          <img :src="apiBase + item.pet_photo" :alt="item.pet_name">
+          <div class="request-info">
+            <strong>{{ item.pet_name }}</strong>
+            <span>Пользователь: {{ item.owner }}</span>
+            <span>Статус: {{ item.status_label }}</span>
+          </div>
+
+          <div class="actions">
+            <button v-if="item.status === 'new'" @click="toProcessing(item.id)">В обработку</button>
+
+            <template v-if="item.status === 'processing'">
+              <input type="file" accept=".jpeg,.jpg,.bmp" @change="onResultChange($event, item.id)">
+              <button @click="toCompleted(item.id)">Услуга оказана</button>
+              <small class="error" v-if="itemErrors[item.id]">{{ itemErrors[item.id] }}</small>
+            </template>
+          </div>
+        </article>
+      </div>
+      <p v-if="!requests.length">Заявок пока нет.</p>
+    </section>
+  </div>
+</body>
+</html>

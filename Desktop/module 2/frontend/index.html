@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroomRoom</title>
+  <link rel="stylesheet" href="/static/assets/styles.css?v=black-v2">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
+  <script src="/static/assets/index.js?v=black-v2" defer></script>
+</head>
+<body>
+  <div id="app" class="page">
+    <header class="hero">
+      <img src="/static/logo/free-icon-linux-6124995.png" alt="GroomRoom" class="logo">
+      <div>
+        <h1>GroomRoom</h1>
+        <p>Сервис ухода за питомцами</p>
+      </div>
+      <div class="links">
+        <a href="/user/">Кабинет</a>
+        <a href="/groom/">Панель администратора</a>
+      </div>
+    </header>
+
+    <section class="layout">
+      <article class="card">
+        <h2>Вход</h2>
+        <form @submit.prevent="login">
+          <label>Логин</label>
+          <input v-model.trim="loginForm.username" required>
+
+          <label>Пароль</label>
+          <input v-model="loginForm.password" type="password" required>
+
+          <p class="error" v-if="loginError">{{ loginError }}</p>
+          <button :disabled="loadingLogin">{{ loadingLogin ? 'Входим...' : 'Войти' }}</button>
+        </form>
+      </article>
+
+      <article class="card">
+        <h2>Регистрация</h2>
+        <form @submit.prevent="register">
+          <label>ФИО</label>
+          <input v-model.trim="registerForm.full_name" :class="{invalid: errors.full_name}" required>
+          <small class="error" v-if="errors.full_name">{{ errors.full_name }}</small>
+
+          <label>Логин</label>
+          <input v-model.trim="registerForm.username" :class="{invalid: errors.username}" required>
+          <small class="error" v-if="errors.username">{{ errors.username }}</small>
+
+          <label>Email</label>
+          <input v-model.trim="registerForm.email" type="email" :class="{invalid: errors.email}" required>
+          <small class="error" v-if="errors.email">{{ errors.email }}</small>
+
+          <label>Пароль</label>
+          <input v-model="registerForm.password" type="password" :class="{invalid: errors.password}" required>
+          <small class="error" v-if="errors.password">{{ errors.password }}</small>
+
+          <label>Повтор пароля</label>
+          <input v-model="registerForm.password_repeat" type="password" :class="{invalid: errors.password_repeat}" required>
+          <small class="error" v-if="errors.password_repeat">{{ errors.password_repeat }}</small>
+
+          <label class="checkbox">
+            <input type="checkbox" v-model="registerForm.consent">
+            <span>Согласие на обработку персональных данных</span>
+          </label>
+          <small class="error" v-if="errors.consent">{{ errors.consent }}</small>
+
+          <button :disabled="loadingRegister">{{ loadingRegister ? 'Регистрируем...' : 'Зарегистрироваться' }}</button>
+        </form>
+      </article>
+    </section>
+
+    <section class="card">
+      <h2>Последние оказанные услуги</h2>
+      <div class="requests-grid">
+        <article class="request-card" v-for="item in completed" :key="item.id">
+          <img :src="apiBase + item.pet_photo" :alt="item.pet_name">
+          <h3>{{ item.pet_name }}</h3>
+          <p>{{ item.status_label }}</p>
+        </article>
+      </div>
+      <p v-if="!completed.length">Пока нет завершенных заявок.</p>
+    </section>
+  </div>
+</body>
+</html>

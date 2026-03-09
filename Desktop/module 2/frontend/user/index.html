@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GroomRoom | Кабинет</title>
+  <link rel="stylesheet" href="/static/assets/styles.css?v=black-v2">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.prod.js" defer></script>
+  <script src="/static/assets/user.js?v=black-v2" defer></script>
+</head>
+<body>
+  <div id="app" class="page">
+    <header class="hero">
+      <h1>Личный кабинет</h1>
+      <div class="links">
+        <a href="/">Главная</a>
+        <button @click="logout">Выход</button>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Новая заявка</h2>
+      <form @submit.prevent="createRequest">
+        <label>Кличка питомца</label>
+        <input v-model.trim="createForm.pet_name" :class="{invalid: createErrors.pet_name}">
+        <small class="error" v-if="createErrors.pet_name">{{ createErrors.pet_name }}</small>
+
+        <label>Фото питомца (jpeg/bmp, до 2 МБ)</label>
+        <input type="file" @change="onPetPhotoChange" accept=".jpeg,.jpg,.bmp" :class="{invalid: createErrors.pet_photo}">
+        <small class="error" v-if="createErrors.pet_photo">{{ createErrors.pet_photo }}</small>
+
+        <button :disabled="createLoading">{{ createLoading ? 'Сохраняем...' : 'Создать заявку' }}</button>
+      </form>
+    </section>
+
+    <section class="card">
+      <h2>Мои заявки</h2>
+      <div class="requests-list">
+        <article class="request-row" v-for="item in requests" :key="item.id">
+          <img :src="apiBase + item.pet_photo" :alt="item.pet_name">
+          <div class="request-info">
+            <strong>{{ item.pet_name }}</strong>
+            <span>{{ item.status_label }}</span>
+          </div>
+          <button v-if="item.can_delete" @click="removeRequest(item.id)">Удалить</button>
+        </article>
+      </div>
+      <p v-if="!requests.length">Пока нет заявок.</p>
+    </section>
+  </div>
+</body>
+</html>
